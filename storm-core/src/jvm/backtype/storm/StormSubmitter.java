@@ -1,5 +1,6 @@
 package backtype.storm;
 
+import backtype.storm.Config;
 import backtype.storm.generated.*;
 import backtype.storm.utils.BufferFileInputStream;
 import backtype.storm.utils.NimbusClient;
@@ -134,12 +135,11 @@ public class StormSubmitter {
         try {
             String uploadLocation = client.getClient().beginFileUpload();
             LOG.info("Uploading topology jar " + localJar + " to assigned location: " + uploadLocation);
-            BufferFileInputStream is = new BufferFileInputStream(localJar);
-            while(true) {
-                byte[] toSubmit = is.read();
-                if(toSubmit.length==0) break;
+            BufferFileInputStream is = new BufferFileInputStream(localJar,
+                (Integer) conf.get(Config.NIMBUS_FILEINPUTSTREAM_BUFFER_SIZE));
+            byte[] toSubmit;
+            while((toSubmit = is.read()).length != 0)
                 client.getClient().uploadChunk(uploadLocation, ByteBuffer.wrap(toSubmit));
-            }
             client.getClient().finishFileUpload(uploadLocation);
             LOG.info("Successfully uploaded topology jar to assigned location: " + uploadLocation);
             return uploadLocation;

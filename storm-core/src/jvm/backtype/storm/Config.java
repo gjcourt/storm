@@ -295,6 +295,13 @@ public class Config extends HashMap<String, Object> {
     public static final Object NIMBUS_AUTHORIZER_SCHEMA = String.class;
 
     /**
+     * The BufferFileInputStream buffer size. Effectively controls the
+     * submitted topology jar upload rate.
+     */
+    public static final String NIMBUS_FILEINPUTSTREAM_BUFFER_SIZE = "nimbus.fileinputstream.buffer.size";
+    public static final Object NIMBUS_FILEINPUTSTREAM_BUFFER_SIZE_SCHEMA = Number.class;
+
+    /**
      * Storm UI binds to this port.
      */
     public static final String UI_PORT = "ui.port";
